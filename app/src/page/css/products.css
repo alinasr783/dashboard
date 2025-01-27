@@ -1,0 +1,156 @@
+.products{
+  width:100vw;
+  overflow:hidden;
+}
+.product-header{
+  width:100vw;
+  height:60px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background: transparent;
+  z-index:10;
+}
+.product-header-content{
+  width: 94%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent;
+}
+.product-header-content-back{
+  width : 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border:1px solid #162d3a;
+  color: #162d3a;
+  border-radius: 50%;
+}
+.product-header-content-title{
+  font-size: 18px;
+  font-weight: 600;
+  font-family: "Quicksand", serif;
+  color : #162d3a;
+}
+.product-header-content-heart{
+  width:30px;
+  height:30px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  border-radius:50%;
+  background:rgba(255,255,255,0.8);;
+  transition:transform 0.3s ease;
+}
+.product-header-content-heart-icon{
+  width:70%;
+  height:60%;
+  align-self: center;
+  text-align: center;
+}
+.home-products{
+  width:96vw;
+  margin:auto;
+  display:flex;
+  flex-wrap:wrap;
+  flex-direction:column;
+  justify-content:center;
+  gap:5px;
+  padding-bottom: 100px;
+  overflow:hidden;
+  margin-top:20px;
+}
+.home-products-content{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  flex-wrap:wrap;
+  gap: 5px;
+}
+.home-products-cube{
+  max-width:100vw;
+
+}
+.flex{
+  display:flex;
+  gap:10px;
+}
+
+.home-products-title {
+  font-family: "Quicksand", serif;
+  font-size: 28px;
+  font-weight: 600;
+  margin: 5px 0;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  color: #233; /* اللون الافتراضي */
+  border-right: 2px solid #333; /* الخط الوامض */
+  animation: typing 2s steps(22) 1s forwards, blink 0.5s step-end infinite, colorChange 10s linear infinite;
+}
+
+/* تأثير الكتابة */
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+/* وميض الخط */
+@keyframes blink {
+  from {
+    border-color: transparent;
+  }
+  to {
+    border-color: #333;
+  }
+}
+
+/* أنيميشن تغيير الألوان */
+@keyframes colorChange {
+  0% {
+    color: #233; /* اللون الأول */
+  }
+  25% {
+    color: #ff6f61; /* اللون الثاني */
+  }
+  50% {
+    color: #6a5acd; /* اللون الثالث */
+  }
+  75% {
+    color: #20b2aa; /* اللون الرابع */
+  }
+  100% {
+    color: #233; /* يعود للون الأول */
+  }
+}
+.cards{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:5px;
+  width:100%;
+  margin:auto;
+}
+.home-products-cards{
+  max-width:100vw;
+  box-shadow:none !important;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.home-products-card{
+  box-shadow:none !important;
+  margin-left:100px
+}
+.swiper_slide{
+  box-shadow:none !important;
+}
