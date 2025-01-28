@@ -1,9 +1,11 @@
 .home{
+  
   width: 100vw;
   overflow: hidden;
 }
 .overwrite {
-  width: 90vw;
+  width: 100vw;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,7 +17,7 @@
 }
 
 .overwrite-content {
-  width: 95%;
+  width: 90%;
   max-width: 1200px; /* تحديد عرض أقصى لتحسين التجربة على الشاشات الكبيرة */
   display: flex;
   flex-direction: column;
@@ -32,6 +34,8 @@
   justify-content: center;
   gap: 15px; /* تحسين التباعد بين الكروت */
   margin-top: 10px;
+  padding-bottom: 20px;
+  border-bottom: 2px dashed #ccc; /* إضافة خط تحت الكروت */
 }
 
 .overwrite-content-cards-card {

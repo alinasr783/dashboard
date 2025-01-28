@@ -154,3 +154,130 @@
 .swiper_slide{
   box-shadow:none !important;
 }
+.add-product{
+  position:fixed;
+  bottom:100px;
+  right:20px;
+  width:60px;
+  height:60px;
+  background: #704f38;
+  color: white;
+  border-radius:50%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:25px;
+}
+
+/* Dialog container */
+.MuiDialog-paper {
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  font-family: "Quicksand", serif;
+  width: 80%; /* Ensure dialog takes full width on mobile */
+  overflow:hidden;
+}
+
+/* Input group styling */
+.input-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.input-group label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.input-group input,
+.input-group textarea {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  transition: border-color 0.3s;
+  width: 100%; /* Make inputs full-width */
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+  border-color: #3f51b5;
+  outline: none;
+}
+
+/* Submit and cancel buttons */
+.MuiDialogActions-root {
+  display: flex;
+  justify-content: space-between; /* Space buttons evenly */
+  padding: 10px 20px;
+  width: 100%; /* Ensure buttons fit mobile layout */
+}
+
+.MuiButton-root {
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 5px;
+  text-transform: none;
+  width: 48%; /* Ensure buttons are small enough for mobile */
+}
+
+.MuiButton-root:first-child {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.MuiButton-root:last-child {
+  background-color: #3f51b5;
+  color: white;
+}
+
+.MuiButton-root:first-child:hover {
+  background-color: #e0e0e0;
+}
+
+.MuiButton-root:last-child:hover {
+  background-color: #2c387e;
+}
+
+/* Textarea styling */
+textarea {
+  resize: none;
+}
+
+/* Dialog title */
+.MuiDialogTitle-root {
+  font-size: 18px;
+  font-weight: bold;
+  color: #3f51b5;
+  margin-bottom: 10px;
+  text-align: center; /* Center title for better appearance on mobile */
+}
+
+/* Dialog content text */
+.MuiDialogContentText-root {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Responsiveness for smaller screens */
+@media (max-width: 600px) {
+  .MuiDialog-paper {
+    padding: 15px;
+    width: 90%;
+  }
+
+  .input-group label {
+    font-size: 12px;
+  }
+
+  .MuiButton-root {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+}

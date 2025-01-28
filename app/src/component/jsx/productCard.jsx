@@ -10,21 +10,8 @@ export default function ProductCard({ product, slide }) {
   const [love, setLove] = useState(false);
   const navigate = useNavigate();
 
-  const updateViewers = async (id) => {
-    const { data, error } = await supabase
-      .from("product")
-      .update({ viewer: product.viewer + 1 })
-      .eq("id", id);
-
-    if (error) {
-      console.error("Error updating product viewers:", error);
-    } else {
-      console.log("Product viewers updated successfully:", data);
-    }
-  };
-
+  
   const handleClick = () => {
-    updateViewers(product.id);
     navigate(`/product/${product.id}`);
   };
 
