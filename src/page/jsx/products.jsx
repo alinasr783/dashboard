@@ -14,7 +14,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
-
+import { FormControlLabel, Checkbox } from "@mui/material";
 import "../css/products.css";
 
 export default function Products() {
@@ -30,6 +30,11 @@ export default function Products() {
   const [sizes, setSizes] = useState([""]);
   const [colors, setColors] = useState([{ url: "", color: "" }]);
   const [images, setImages] = useState([""]);
+  const [tags, setTags] = useState({
+    best_price: false,
+    new: false,
+    top_rating: false,
+  });
   const [categories, setCategories] = useState([]);
   const [categoryId, setCategoryId] = useState(null); // لتخزين id للـ category المختار
 
@@ -43,7 +48,7 @@ export default function Products() {
       if (error) {
         console.error("Error fetching categories:", error);
       } else {
-        setCategories(data); // تخزين الـ categories في الحالة
+        setCategories(data); 
       }
     } catch (err) {
       console.error("Unexpected error:", err);
@@ -51,7 +56,7 @@ export default function Products() {
   };
 
   useEffect(() => {
-    getCategories(); // استدعاء الدالة لتحميل الـ categories عند تحميل الصفحة
+    getCategories(); 
   }, []);
 
   const handleClickOpen = () => {
@@ -156,9 +161,14 @@ export default function Products() {
         des,
         price: Number(price),
         rating: Number(rating),
-        sizes: sizes.filter(size => size.trim() !== ""), // تصفية الحقول الفارغة
-        colors: colors.filter(color => color.url.trim() !== "" && color.color.trim() !== ""), // تصفية الحقول الفارغة
-        images: images.filter(image => image.trim() !== ""), // تصفية الحقول الفارغة
+        sizes: sizes.filter(size => size.trim() !== ""),
+        colors: colors.filter(color => color.url.trim() !== "" && color.color.trim() !== ""),
+        images: images.filter(image => image.trim() !== ""),
+        added_cart: 0,
+        added_wishlist: 0,
+        orders: 0,
+        viewer: 0,
+        tags: Object.keys(tags).filter(tag => tags[tag]), // إضافة الـ tags
       };
 
       if (!newProduct.sizes.length || !newProduct.colors.length || !newProduct.images.length) {
@@ -324,6 +334,40 @@ export default function Products() {
                   renderInput={(params) => (
                     <TextField {...params} label="Select Category" variant="outlined" />
                   )}
+                />
+              </div>
+
+              <div className="input-group">
+                <label>Tags</label>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={tags.best_price}
+                      onChange={(e) => setTags({ ...tags, best_price: e.target.checked })}
+                      name="best_price"
+                    />
+                  }
+                  label="Best Price"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={tags.new}
+                      onChange={(e) => setTags({ ...tags, new: e.target.checked })}
+                      name="new"
+                    />
+                  }
+                  label="New"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={tags.top_rating}
+                      onChange={(e) => setTags({ ...tags, top_rating: e.target.checked })}
+                      name="top_rating"
+                    />
+                  }
+                  label="Top Rating"
                 />
               </div>
             </form>

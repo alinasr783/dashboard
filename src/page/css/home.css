@@ -169,8 +169,8 @@
 .top-sales-info{
   display:flex;
   flex-direction:column;
-  justify-content:flex-start;
-  gap:5px;
+  justify-content:space-evenly;
+  gap:10px;
   align-items: flex-start;
 }
 
@@ -184,14 +184,11 @@
 .top-sales-info p {
   font-size: 16px;
   color: #555;
-  margin-top: 5px;
-
   font-weight: 700;
 }
 .top-sales-info span {
   font-size: 12px;
   color: #777;
-  margin-top: -10px;
 }
 
 @media (max-width: 768px) {
