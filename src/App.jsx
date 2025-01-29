@@ -8,7 +8,6 @@ import Users from './page/jsx/users.jsx';
 import Category from './page/jsx/category.jsx';
 function App() {
   return (
-    <Router>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
@@ -18,7 +17,6 @@ function App() {
         <Route path="/users" element={<Users />} />
         <Route path="/category" element={<Category />} />
       </Routes>
-    </Router>
   );
 }
 
