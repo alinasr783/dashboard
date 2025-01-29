@@ -38,20 +38,7 @@ export default function Orders() {
     navigate(`/order/${orderId}`, { state: { order: orderData } });
   };
 
-  const handleCancelOrder = async (orderId) => {
-    const { error } = await supabase
-      .from("orders")
-      .update({ status: "cancelled" })
-      .eq("id", orderId);
-
-    if (error) {
-      console.error("Failed to cancel order", error);
-    } else {
-      setOrders(orders.map(order =>
-        order.id === orderId ? { ...order, status: "cancelled" } : order
-      ));
-    }
-  };
+  
 
   return (
     <>

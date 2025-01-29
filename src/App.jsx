@@ -5,6 +5,7 @@ import Product from './page/jsx/product.jsx';
 import Orders from './page/jsx/orders.jsx';
 import Order from './page/jsx/order.jsx';
 import Users from './page/jsx/users.jsx';
+import Category from './page/jsx/category.jsx';
 function App() {
   return (
     <Router>
@@ -15,6 +16,7 @@ function App() {
         <Route path="/orders" element={<Orders />} />
         <Route path="/order/:id" element={<Order />} />
         <Route path="/users" element={<Users />} />
+        <Route path="/category" element={<Category />} />
       </Routes>
     </Router>
   );
