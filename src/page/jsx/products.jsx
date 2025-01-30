@@ -26,6 +26,7 @@ export default function Products() {
   const [title, setTitle] = useState("");
   const [des, setDes] = useState("");
   const [price, setPrice] = useState("");
+  const [discount, setDiscount] = useState(""); // حالة جديدة للخصم
   const [rating, setRating] = useState("");
   const [sizes, setSizes] = useState([""]);
   const [colors, setColors] = useState([{ url: "", color: "" }]);
@@ -36,7 +37,7 @@ export default function Products() {
     top_rating: false,
   });
   const [categories, setCategories] = useState([]);
-  const [categoryId, setCategoryId] = useState(null); // لتخزين id للـ category المختار
+  const [categoryId, setCategoryId] = useState(null);
 
   const [open, setOpen] = useState(false);
   const theme = useTheme();
@@ -48,7 +49,7 @@ export default function Products() {
       if (error) {
         console.error("Error fetching categories:", error);
       } else {
-        setCategories(data); 
+        setCategories(data);
       }
     } catch (err) {
       console.error("Unexpected error:", err);
@@ -56,7 +57,7 @@ export default function Products() {
   };
 
   useEffect(() => {
-    getCategories(); 
+    getCategories();
   }, []);
 
   const handleClickOpen = () => {
@@ -88,7 +89,6 @@ export default function Products() {
     updatedSizes[index] = value;
     setSizes(updatedSizes);
 
-    // إضافة حقل جديد إذا كان الحقل الحالي ليس فارغًا
     if (value !== "" && index === updatedSizes.length - 1) {
       setSizes([...updatedSizes, ""]);
     }
@@ -100,7 +100,6 @@ export default function Products() {
     updatedColors[index][key] = value;
     setColors(updatedColors);
 
-    // إضافة حقل جديد إذا كان الحقل الحالي مكتملًا
     if (
       updatedColors[index].url !== "" &&
       updatedColors[index].color !== "" &&
@@ -116,13 +115,10 @@ export default function Products() {
     updatedImages[index] = value;
     setImages(updatedImages);
 
-    // إضافة حقل جديد إذا كان الحقل الحالي ليس فارغًا
     if (value !== "" && index === updatedImages.length - 1) {
       setImages([...updatedImages, ""]);
     }
   };
-
-
 
   useEffect(() => {
     getProduct();
@@ -135,11 +131,12 @@ export default function Products() {
       const bestPriceProducts = [];
 
       product.forEach((item) => {
-        item.tags && item.tags.forEach((el) => {
-          if (el === "new") newProducts.push(item);
-          if (el === "top_rating") topRatedProducts.push(item);
-          if (el === "best_price") bestPriceProducts.push(item);
-        });
+        item.tags &&
+          item.tags.forEach((el) => {
+            if (el === "new") newProducts.push(item);
+            if (el === "top_rating") topRatedProducts.push(item);
+            if (el === "best_price") bestPriceProducts.push(item);
+          });
       });
 
       setNewProduct(newProducts);
@@ -150,7 +147,6 @@ export default function Products() {
 
   const addProduct = async () => {
     try {
-      // التأكد من أن الحقول ليست فارغة
       if (!title || !des || !price || !rating) {
         alert("Please fill in all required fields.");
         return;
@@ -160,18 +156,26 @@ export default function Products() {
         title,
         des,
         price: Number(price),
+        discount: discount ? Number(discount) : null, // إضافة الخصم
         rating: Number(rating),
-        sizes: sizes.filter(size => size.trim() !== ""),
-        colors: colors.filter(color => color.url.trim() !== "" && color.color.trim() !== ""),
-        images: images.filter(image => image.trim() !== ""),
+        sizes: sizes.filter((size) => size.trim() !== ""),
+        colors: colors.filter(
+          (color) => color.url.trim() !== "" && color.color.trim() !== ""
+        ),
+        images: images.filter((image) => image.trim() !== ""),
         added_cart: 0,
         added_wishlist: 0,
         orders: 0,
         viewer: 0,
-        tags: Object.keys(tags).filter(tag => tags[tag]), // إضافة الـ tags
+        tags: Object.keys(tags).filter((tag) => tags[tag]),
+        category_id: categoryId,
       };
 
-      if (!newProduct.sizes.length || !newProduct.colors.length || !newProduct.images.length) {
+      if (
+        !newProduct.sizes.length ||
+        !newProduct.colors.length ||
+        !newProduct.images.length
+      ) {
         alert("Please provide valid sizes, colors, and images.");
         return;
       }
@@ -219,9 +223,7 @@ export default function Products() {
             <DialogContentText>
               Fill out the required fields
             </DialogContentText>
-            {/* Inputs */}
             <form id="add-product-form">
-              {/* Title */}
               <div className="input-group">
                 <label htmlFor="title">Title</label>
                 <input
@@ -234,7 +236,6 @@ export default function Products() {
                 />
               </div>
 
-              {/* Description */}
               <div className="input-group">
                 <label htmlFor="description">Description</label>
                 <input
@@ -247,7 +248,6 @@ export default function Products() {
                 />
               </div>
 
-              {/* Price */}
               <div className="input-group">
                 <label htmlFor="price">Price</label>
                 <input
@@ -260,7 +260,18 @@ export default function Products() {
                 />
               </div>
 
-              {/* Rating */}
+              <div className="input-group">
+                <label htmlFor="discount">Discount</label>
+                <input
+                  type="number"
+                  id="discount"
+                  value={discount}
+                  onChange={(e) => setDiscount(e.target.value)}
+                  placeholder="Enter product discount (optional)"
+                  min="0"
+                />
+              </div>
+
               <div className="input-group">
                 <label htmlFor="rating">Rating</label>
                 <input
@@ -276,7 +287,6 @@ export default function Products() {
                 />
               </div>
 
-              {/* Sizes */}
               <div className="input-group">
                 <label>Sizes</label>
                 {sizes.map((size, index) => (
@@ -290,7 +300,6 @@ export default function Products() {
                 ))}
               </div>
 
-              {/* Colors */}
               <div className="input-group">
                 <label>Colors</label>
                 {colors.map((colorObj, index) => (
@@ -311,7 +320,6 @@ export default function Products() {
                 ))}
               </div>
 
-              {/* Images */}
               <div className="input-group">
                 <label>Images</label>
                 {images.map((image, index) => (
@@ -329,8 +337,8 @@ export default function Products() {
                 <label>Category</label>
                 <Autocomplete
                   options={categories}
-                  getOptionLabel={(option) => option.name} // عرض الاسم
-                  onChange={(event, newValue) => setCategoryId(newValue ? newValue.id : null)} // تخزين id للـ category المختار
+                  getOptionLabel={(option) => option.name}
+                  onChange={(event, newValue) => setCategoryId(newValue ? newValue.id : null)}
                   renderInput={(params) => (
                     <TextField {...params} label="Select Category" variant="outlined" />
                   )}

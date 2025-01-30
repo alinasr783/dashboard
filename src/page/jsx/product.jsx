@@ -33,6 +33,7 @@ export default function Product() {
   const [open, setOpen] = useState(false);
   const [editValues, setEditValues] = useState(null);
   const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [discount, setDiscount] = useState("");
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
   const navigate = useNavigate();
@@ -73,8 +74,18 @@ export default function Product() {
 
   const updateProduct = async () => {
     try {
-      if (!editValues.title || !editValues.description || !editValues.price || !editValues.rating) {
+      if (!editValues.title || !editValues.des || !editValues.price || !editValues.rating) {
         alert("Please fill in all required fields.");
+        console.log("title : "+editValues.title)
+        console.log("description : "+editValues.des)
+        console.log("price : "+editValues.price)
+        console.log("rating : "+editValues.rating)
+        console.log("sizes : "+editValues.sizes)
+        console.log("colors : "+editValues.colors)
+        console.log("images : "+editValues.images)
+        console.log("categoryId : "+editValues.categoryId)
+        console.log("discount : "+discount)
+        
         return;
       }
 
@@ -82,10 +93,11 @@ export default function Product() {
         .from("product")
         .update({
           title: editValues.title,
-          des: editValues.description, // هنا الحقل في الداتابيز اسمه 'des'
+          des: editValues.des,
           price: editValues.price,
+          discount: editValues.discount || null, // إضافة الخصم
           rating: editValues.rating,
-          sizes: editValues.sizes.filter(size => size !== ""), // إزالة الحقول الفارغة
+          sizes: editValues.sizes.filter(size => size !== ""),
           colors: editValues.colors.filter(color => color.url && color.color),
           images: editValues.images.filter(img => img !== ""),
           categoryId: editValues.categoryId,
@@ -375,6 +387,18 @@ export default function Product() {
                 onChange={handleInputChange}
                 placeholder="Enter product price"
                 required
+              />
+            </div>
+            <div className="input-group">
+              <label htmlFor="discount">Discount</label>
+              <input
+                type="number"
+                id="discount"
+                name="discount"
+                value={editValues?.discount || ""}
+                onChange={handleInputChange}
+                placeholder="Enter product discount (optional)"
+                min="0"
               />
             </div>
 
