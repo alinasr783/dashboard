@@ -168,7 +168,7 @@ export default function Products() {
         orders: 0,
         viewer: 0,
         tags: Object.keys(tags).filter((tag) => tags[tag]),
-        category_id: categoryId,
+        category: categoryId,
       };
 
       if (
