@@ -122,6 +122,7 @@ export default function Order() {
                     <span className="details-label">Status:</span>
                     <span className="details-value">{order.state}</span>
                   </div>
+                  
                 </div>
               </div>
 

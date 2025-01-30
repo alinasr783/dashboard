@@ -64,7 +64,12 @@ export default function Orders() {
                     width="80"
                   />
                   <div className="order-item-details">
-                    <h4>{el.products[0].title}</h4>
+                    <h3>{el.full_name}</h3>
+                    <strong className="order-products">
+                    {el.products.map((product, index)=>(
+                  <p>{product.title} ,</p>
+                    ))}
+                      </strong>
                     <p>state : {el.state}</p>
                     <strong>total price : {el.total_price} EGP</strong>
                   </div>

@@ -53,12 +53,12 @@ export default function Product() {
         setProduct(data);
         setEditValues({
           title: data.title,
-          description: data.description,
+          description: data.des, // ملاحظة: الحقل في قاعدة البيانات اسمه 'des'
           price: data.price,
           rating: data.rating,
-          sizes: data.sizes || [""],
-          colors: data.colors || [{ url: "", color: "" }],
-          images: data.images || [""],
+          sizes: data.sizes || [],
+          colors: data.colors || [],
+          images: data.images || [],
           categoryId: data.categoryId || null,
         });
       } catch (error) {
@@ -73,7 +73,6 @@ export default function Product() {
 
   const updateProduct = async () => {
     try {
-      // تحقق من أن القيم الأساسية غير فارغة
       if (!editValues.title || !editValues.description || !editValues.price || !editValues.rating) {
         alert("Please fill in all required fields.");
         return;
@@ -83,13 +82,13 @@ export default function Product() {
         .from("product")
         .update({
           title: editValues.title,
-          des: editValues.description,
+          des: editValues.description, // هنا الحقل في الداتابيز اسمه 'des'
           price: editValues.price,
           rating: editValues.rating,
-          sizes: editValues.sizes,
-          colors: editValues.colors,
-          images: editValues.images,
-          category: editValues.categoryId,
+          sizes: editValues.sizes.filter(size => size !== ""), // إزالة الحقول الفارغة
+          colors: editValues.colors.filter(color => color.url && color.color),
+          images: editValues.images.filter(img => img !== ""),
+          categoryId: editValues.categoryId,
         })
         .eq("id", product.id);
 
@@ -99,7 +98,7 @@ export default function Product() {
       } else {
         alert("Product updated successfully!");
         handleClose();
-        fetchProduct(); // لإعادة جلب المنتج بعد التحديث
+        window.location.reload(); // إعادة تحميل الصفحة للتأكد من تحديث البيانات
       }
     } catch (error) {
       console.error("Unexpected error:", error);
@@ -115,36 +114,42 @@ export default function Product() {
   };
 
   const handleSizeChange = (index, value) => {
-    const updatedSizes = [...sizes];
+    const updatedSizes = [...editValues.sizes];
     updatedSizes[index] = value;
+
     if (value && index === updatedSizes.length - 1) {
-      setSizes([...updatedSizes, ""]); // Add a new size field
-    } else {
-      setSizes(updatedSizes);
+      updatedSizes.push(""); // إضافة حقل جديد إذا كان الحقل الأخير ممتلئ
     }
+
+    setEditValues(prev => ({...prev, sizes: updatedSizes}));
   };
 
   const handleColorChange = (index, key, value) => {
-    const updatedColors = [...colors];
+    const updatedColors = [...editValues.colors];
     updatedColors[index][key] = value;
 
-    if (updatedColors[index].url && updatedColors[index].color && index === updatedColors.length - 1) {
-      setColors([...updatedColors, { url: "", color: "" }]); // Add a new color field
-    } else {
-      setColors(updatedColors);
+    if (
+      updatedColors[index].url && 
+      updatedColors[index].color && 
+      index === updatedColors.length - 1
+    ) {
+      updatedColors.push({ url: "", color: "" }); // إضافة حقل جديد إذا كان الحقل الأخير ممتلئ
     }
+
+    setEditValues(prev => ({...prev, colors: updatedColors}));
   };
 
   const handleImageChange = (index, value) => {
-    const updatedImages = [...images];
+    const updatedImages = [...editValues.images];
     updatedImages[index] = value;
 
     if (value && index === updatedImages.length - 1) {
-      setImages([...updatedImages, ""]); // Add a new image field
-    } else {
-      setImages(updatedImages);
+      updatedImages.push(""); // إضافة حقل جديد إذا كان الحقل الأخير ممتلئ
     }
+
+    setEditValues(prev => ({...prev, images: updatedImages}));
   };
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -389,9 +394,10 @@ export default function Product() {
               />
             </div>
 
+            {/* Sizes */}
             <div className="input-group">
               <label>Sizes</label>
-              {sizes.map((size, index) => (
+              {editValues?.sizes?.map((size, index) => (
                 <input
                   key={index}
                   type="text"
@@ -402,9 +408,10 @@ export default function Product() {
               ))}
             </div>
 
+            {/* Colors */}
             <div className="input-group">
               <label>Colors</label>
-              {colors.map((colorObj, index) => (
+              {editValues?.colors?.map((colorObj, index) => (
                 <div key={index} style={{ marginBottom: "10px" }}>
                   <input
                     type="text"
@@ -422,9 +429,10 @@ export default function Product() {
               ))}
             </div>
 
+            {/* Images */}
             <div className="input-group">
               <label>Images</label>
-              {images.map((image, index) => (
+              {editValues?.images?.map((image, index) => (
                 <input
                   key={index}
                   type="text"
@@ -435,13 +443,16 @@ export default function Product() {
               ))}
             </div>
 
+            {/* Category */}
             <div className="input-group">
               <label>Category</label>
               <Autocomplete
                 options={categories}
                 getOptionLabel={(option) => option.name}
-                value={categories.find((category) => category.id === categoryId) || null}
-                onChange={(event, newValue) => setCategoryId(newValue ? newValue.id : null)}
+                value={categories.find((category) => category.id === editValues?.categoryId) || null}
+                onChange={(event, newValue) => 
+                  setEditValues(prev => ({...prev, categoryId: newValue?.id || null}))
+                }
                 renderInput={(params) => (
                   <TextField {...params} label="Select Category" variant="outlined" />
                 )}

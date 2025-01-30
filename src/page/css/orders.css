@@ -108,3 +108,7 @@
   flex-direction: column;
   justify-content: space-between;
 }
+.order-products{
+  display: flex;
+  justify-content: ;
+}
