@@ -8,6 +8,7 @@ import Users from './page/jsx/users.jsx';
 import Category from './page/jsx/category.jsx';
 import Profile from './page/jsx/profile.jsx';
 import Sliders from './page/jsx/sliders.jsx';
+import Settings from './page/jsx/settings.jsx';
 function App() {
   return (
       <Routes>
@@ -20,6 +21,7 @@ function App() {
         <Route path="/category" element={<Category />} />
         <Route path="/sliders" element={<Sliders />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/settings" element={<Settings />} />
       </Routes>
   );
 }

@@ -29,7 +29,7 @@ export default function Product() {
   const [colors, setColors] = useState([{ url: "", color: "" }]);
   const [images, setImages] = useState([""]);
   const [categories, setCategories] = useState([]);
-  const [categoryId, setCategoryId] = useState(null);
+  const [category, setCategoryId] = useState(null);
   const [open, setOpen] = useState(false);
   const [editValues, setEditValues] = useState(null);
   const [openEditDialog, setOpenEditDialog] = useState(false);
@@ -60,7 +60,7 @@ export default function Product() {
           sizes: data.sizes || [],
           colors: data.colors || [],
           images: data.images || [],
-          categoryId: data.categoryId || null,
+          category: data.category || null,
         });
       } catch (error) {
         console.error("Error fetching product:", error.message);
@@ -83,7 +83,7 @@ export default function Product() {
         console.log("sizes : "+editValues.sizes)
         console.log("colors : "+editValues.colors)
         console.log("images : "+editValues.images)
-        console.log("categoryId : "+editValues.categoryId)
+        console.log("category : "+editValues.category)
         console.log("discount : "+discount)
         
         return;
@@ -100,7 +100,7 @@ export default function Product() {
           sizes: editValues.sizes.filter(size => size !== ""),
           colors: editValues.colors.filter(color => color.url && color.color),
           images: editValues.images.filter(img => img !== ""),
-          categoryId: editValues.categoryId,
+          category: editValues.category,
         })
         .eq("id", product.id);
 
@@ -473,9 +473,9 @@ export default function Product() {
               <Autocomplete
                 options={categories}
                 getOptionLabel={(option) => option.name}
-                value={categories.find((category) => category.id === editValues?.categoryId) || null}
+                value={categories.find((category) => category.id === editValues?.category) || null}
                 onChange={(event, newValue) => 
-                  setEditValues(prev => ({...prev, categoryId: newValue?.id || null}))
+                  setEditValues(prev => ({...prev, category: newValue?.id || null}))
                 }
                 renderInput={(params) => (
                   <TextField {...params} label="Select Category" variant="outlined" />
