@@ -16,19 +16,9 @@ export default function Orders() {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [open, setOpen] = useState(false);
-  const [sliderInputs, setSliderInputs] = useState([{ url: "", link: "" }]);
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   useEffect(() => {
     const getOrders = async () => {
@@ -55,53 +45,6 @@ export default function Orders() {
     navigate(`/order/${orderId}`, { state: { order: orderData } });
   };
 
-  const handleSliderChange = (index, key, value) => {
-    const updatedSlider = [...sliderInputs];
-    updatedSlider[index][key] = value;
-
-    if (
-      updatedSlider[index].url &&
-      updatedSlider[index].link &&
-      index === updatedSlider.length - 1
-    ) {
-      updatedSlider.push({ url: "", link: "" });
-    }
-
-    setSliderInputs(updatedSlider);
-  };
-
-  const addProduct = async () => {
-    try {
-      // تصفية الحقول الفارغة
-      const sliderData = sliderInputs
-        .filter(item => item.url.trim() !== "" && item.link.trim() !== "") // تصفية الحقول الفارغة
-        .map(item => ({
-          image: item.url,
-          link: item.link.startsWith('/') ? item.link : `/${item.link}`
-        }));
-
-      // التحقق من وجود بيانات صالحة
-      if (sliderData.length === 0) {
-        alert("Please fill in at least one valid slider.");
-        return;
-      }
-
-      // إرسال البيانات
-      const { data, error } = await supabase
-        .from('slider')
-        .insert(sliderData);
-
-      if (error) throw error;
-
-      handleClose();
-      alert('Sliders added successfully!');
-      // إعادة تحميل البيانات أو تحديث الواجهة
-
-    } catch (error) {
-      console.error('Error adding sliders:', error);
-      alert('Failed to add sliders');
-    }
-  };
 
   return (
     <>
@@ -146,45 +89,6 @@ export default function Orders() {
                 ))}
               </div>
             </div>
-
-            <div className="add-product" onClick={handleClickOpen}>
-              <i className="fa fa-plus"></i>
-            </div>
-            <Dialog
-              fullScreen={fullScreen}
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="responsive-dialog-title"
-            >
-              <DialogTitle id="responsive-dialog-title">{"Add Sliders"}
-              </DialogTitle>
-              <DialogContent>
-                {/* Slider Images */}
-                <div className="input-group">
-                  <label>Slider Images</label>
-                  {sliderInputs.map((slider, index) => (
-                    <div key={index} style={{ marginBottom: "10px" }}>
-                      <input
-                        type="text"
-                        value={slider.url}
-                        onChange={(e) => handleSliderChange(index, "url", e.target.value)}
-                        placeholder="Image URL"
-                      />
-                      <input
-                        type="text"
-                        value={slider.link}
-                        onChange={(e) => handleSliderChange(index, "link", e.target.value)}
-                        placeholder="Link (e.g. product)"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </DialogContent>
-              <DialogActions>
-                <button className="cancel-button" onClick={handleClose}>Cancel</button>
-                <button className="add-button" onClick={addProduct}>Add Sliders</button>
-              </DialogActions>
-            </Dialog>
           </>
         )}
       </div>
