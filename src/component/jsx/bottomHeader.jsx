@@ -42,7 +42,7 @@ export default function BottomHeader({vertical}) {
       setIsWishlist(false);
       setIsOrders(true);
       setIsProfile(false)
-    }else if(location.pathname === "/category"){
+    }else if(location.pathname === "/profile"){
       setIsHome(false);
       setIsCart(false);
       setIsWishlist(false);
@@ -83,7 +83,7 @@ export default function BottomHeader({vertical}) {
   }
   const handleProfileClicked = () => {
     setIsProfile(true);
-    navigate("/category");
+    navigate("/profile");
   }
 
   return (

@@ -6,6 +6,8 @@ import Orders from './page/jsx/orders.jsx';
 import Order from './page/jsx/order.jsx';
 import Users from './page/jsx/users.jsx';
 import Category from './page/jsx/category.jsx';
+import Profile from './page/jsx/profile.jsx';
+import Sliders from './page/jsx/sliders.jsx';
 function App() {
   return (
       <Routes>
@@ -16,6 +18,8 @@ function App() {
         <Route path="/order/:id" element={<Order />} />
         <Route path="/users" element={<Users />} />
         <Route path="/category" element={<Category />} />
+        <Route path="/sliders" element={<Sliders />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
   );
 }
