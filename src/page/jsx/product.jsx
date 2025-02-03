@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import BottomHeader from "../../component/jsx/bottomHeader";
 import ProductSlider from "../../component/jsx/productSlider";
-import { WhiteCart, OrdersActive, CartActive,WishlistActive,Money, UsersIcon } from "../../component/jsx/icons";
+import { WhiteCart, OrdersActive, CartActive, WishlistActive, Money, UsersIcon } from "../../component/jsx/icons";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import ProductCard from "../../component/jsx/productCard.jsx";
@@ -34,9 +34,25 @@ export default function Product() {
   const [editValues, setEditValues] = useState(null);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [discount, setDiscount] = useState("");
+  const [relatedProducts, setRelatedProducts] = useState([{ id: "", price: "" }]); // حالة لتخزين المنتجات المرتبطة
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
   const navigate = useNavigate();
+  const [availableProducts, setAvailableProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { data, error } = await supabase.from("product").select("*");
+        if (error) throw error;
+        setAvailableProducts(data);
+      } catch (error) {
+        console.error("Error fetching products:", error.message);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -54,14 +70,16 @@ export default function Product() {
         setProduct(data);
         setEditValues({
           title: data.title,
-          description: data.des, // ملاحظة: الحقل في قاعدة البيانات اسمه 'des'
+          des: data.des,
           price: data.price,
           rating: data.rating,
           sizes: data.sizes || [],
           colors: data.colors || [],
           images: data.images || [],
           category: data.category || null,
+          products: data.relatedProducts || [], // إضافة المنتجات المرتبطة
         });
+        setRelatedProducts(data.relatedProducts || [{ id: "", price: "" }]); // تعيين القيمة الافتراضية
       } catch (error) {
         console.error("Error fetching product:", error.message);
       } finally {
@@ -76,32 +94,19 @@ export default function Product() {
     try {
       if (!editValues.title || !editValues.des || !editValues.price || !editValues.rating) {
         alert("Please fill in all required fields.");
-        console.log("title : "+editValues.title)
-        console.log("description : "+editValues.des)
-        console.log("price : "+editValues.price)
-        console.log("rating : "+editValues.rating)
-        console.log("sizes : "+editValues.sizes)
-        console.log("colors : "+editValues.colors)
-        console.log("images : "+editValues.images)
-        console.log("category : "+editValues.category)
-        console.log("discount : "+discount)
-        
         return;
       }
 
+      const updatedProduct = {
+        ...editValues,
+        products: relatedProducts.filter(
+          (product) => product.id !== "" && product.price !== ""
+        ), // تصفية القيم الفارغة
+      };
+
       const { data, error } = await supabase
         .from("product")
-        .update({
-          title: editValues.title,
-          des: editValues.des,
-          price: editValues.price,
-          discount: editValues.discount || null, // إضافة الخصم
-          rating: editValues.rating,
-          sizes: editValues.sizes.filter(size => size !== ""),
-          colors: editValues.colors.filter(color => color.url && color.color),
-          images: editValues.images.filter(img => img !== ""),
-          category: editValues.category,
-        })
+        .update(updatedProduct)
         .eq("id", product.id);
 
       if (error) {
@@ -133,7 +138,7 @@ export default function Product() {
       updatedSizes.push(""); // إضافة حقل جديد إذا كان الحقل الأخير ممتلئ
     }
 
-    setEditValues(prev => ({...prev, sizes: updatedSizes}));
+    setEditValues((prev) => ({ ...prev, sizes: updatedSizes }));
   };
 
   const handleColorChange = (index, key, value) => {
@@ -141,14 +146,14 @@ export default function Product() {
     updatedColors[index][key] = value;
 
     if (
-      updatedColors[index].url && 
-      updatedColors[index].color && 
+      updatedColors[index].url &&
+      updatedColors[index].color &&
       index === updatedColors.length - 1
     ) {
       updatedColors.push({ url: "", color: "" }); // إضافة حقل جديد إذا كان الحقل الأخير ممتلئ
     }
 
-    setEditValues(prev => ({...prev, colors: updatedColors}));
+    setEditValues((prev) => ({ ...prev, colors: updatedColors }));
   };
 
   const handleImageChange = (index, value) => {
@@ -159,9 +164,16 @@ export default function Product() {
       updatedImages.push(""); // إضافة حقل جديد إذا كان الحقل الأخير ممتلئ
     }
 
-    setEditValues(prev => ({...prev, images: updatedImages}));
+    setEditValues((prev) => ({ ...prev, images: updatedImages }));
   };
 
+  const handleRelatedProductChange = (index, key, value) => {
+    const updatedRelatedProducts = [...relatedProducts];
+    updatedRelatedProducts[index][key] = value;
+
+    // إزالة الجزء الذي يضيف حقلًا جديدًا تلقائيًا
+    setRelatedProducts(updatedRelatedProducts);
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -189,11 +201,10 @@ export default function Product() {
   }, []);
 
   const handleEditOpen = () => {
-    console.log('Editing product...', product);  // هذا سيساعدك في معرفة إذا كانت قيم المنتج صحيحة
+    console.log("Editing product...", product); // هذا سيساعدك في معرفة إذا كانت قيم المنتج صحيحة
     setEditValues(product);
     setOpenEditDialog(true);
   };
-
 
   const deleteProduct = async (id) => {
     try {
@@ -218,9 +229,9 @@ export default function Product() {
   if (!product) {
     return <div>Product not found!</div>;
   }
+
   return (
     <div className="product-p">
-
       <div className="product">
         <div className="overwrite">
           <div className="overwrite-content">
@@ -295,7 +306,7 @@ export default function Product() {
                 <div className="overwrite-content-cards-card-content">
                   <div className="overwrite-content-cards-card-content-value">
                     <i className="fa fa-plus"></i>
-                    {product.orders * product.price } EGP
+                    {product.orders * product.price} EGP
                   </div>
                   <div className="overwrite-content-cards-card-content-title">
                     Sales
@@ -343,7 +354,7 @@ export default function Product() {
       {/* Dialog */}
       <Dialog
         fullScreen={fullScreen}
-        open={openEditDialog}  // تأكد أن هذه هي التي تتحكم في الظهور
+        open={openEditDialog} // تأكد أن هذه هي التي تتحكم في الظهور
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
@@ -474,13 +485,48 @@ export default function Product() {
                 options={categories}
                 getOptionLabel={(option) => option.name}
                 value={categories.find((category) => category.id === editValues?.category) || null}
-                onChange={(event, newValue) => 
-                  setEditValues(prev => ({...prev, category: newValue?.id || null}))
+                onChange={(event, newValue) =>
+                  setEditValues((prev) => ({ ...prev, category: newValue?.id || null }))
                 }
                 renderInput={(params) => (
                   <TextField {...params} label="Select Category" variant="outlined" />
                 )}
               />
+            </div>
+
+            {/* Related Products */}
+            <div className="input-group">
+              <label>Related Products</label>
+              {relatedProducts.map((el , index) => (
+                <div key={index} style={{ marginBottom: "10px" }}>
+                  <Autocomplete
+                    options={availableProducts}
+                    getOptionLabel={(option) => option.title}
+                    onChange={(event, newValue) =>
+                      handleRelatedProductChange(index, "id", newValue ? newValue.id : "")
+                    }
+                    renderInput={(params) => (
+                      <TextField {...params} label="Select Product" variant="outlined" />
+                    )}
+                  />
+                  <input
+                    type="number"
+                    value={el.price}
+                    onChange={(e) =>
+                      handleRelatedProductChange(index, "price", e.target.value)
+                    }
+                    placeholder="Enter price"
+                  />
+                </div>
+              ))}
+              {/* زر لإضافة حقل جديد */}
+              {/* <button
+                type="button"
+                onClick={() => setRelatedProducts([...relatedProducts, { id: "", price: "" }])}
+                style={{ marginTop: "10px" }}
+              >
+                Add Related Product
+              </button> */}
             </div>
           </form>
         </DialogContent>

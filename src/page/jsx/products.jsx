@@ -26,7 +26,7 @@ export default function Products() {
   const [title, setTitle] = useState("");
   const [des, setDes] = useState("");
   const [price, setPrice] = useState("");
-  const [discount, setDiscount] = useState(""); // حالة جديدة للخصم
+  const [discount, setDiscount] = useState("");
   const [rating, setRating] = useState("");
   const [sizes, setSizes] = useState([""]);
   const [colors, setColors] = useState([{ url: "", color: "" }]);
@@ -38,6 +38,7 @@ export default function Products() {
   });
   const [categories, setCategories] = useState([]);
   const [categoryId, setCategoryId] = useState(null);
+  const [relatedProducts, setRelatedProducts] = useState([{ id: "", price: "" }]); // حالة لتخزين المنتجات المرتبطة
 
   const [open, setOpen] = useState(false);
   const theme = useTheme();
@@ -120,6 +121,20 @@ export default function Products() {
     }
   };
 
+  const handleRelatedProductChange = (index, key, value) => {
+    const updatedRelatedProducts = [...relatedProducts];
+    updatedRelatedProducts[index][key] = value;
+    setRelatedProducts(updatedRelatedProducts);
+
+    if (
+      updatedRelatedProducts[index].id !== "" &&
+      updatedRelatedProducts[index].price !== "" &&
+      index === updatedRelatedProducts.length - 1
+    ) {
+      setRelatedProducts([...updatedRelatedProducts, { id: "", price: "" }]);
+    }
+  };
+
   useEffect(() => {
     getProduct();
   }, []);
@@ -156,7 +171,7 @@ export default function Products() {
         title,
         des,
         price: Number(price),
-        discount: discount ? Number(discount) : null, // إضافة الخصم
+        discount: discount ? Number(discount) : null,
         rating: Number(rating),
         sizes: sizes.filter((size) => size.trim() !== ""),
         colors: colors.filter(
@@ -169,6 +184,9 @@ export default function Products() {
         viewer: 0,
         tags: Object.keys(tags).filter((tag) => tags[tag]),
         category: categoryId,
+        products: relatedProducts.filter(
+          (product) => product.id !== "" && product.price !== ""
+        ), // إضافة المنتجات المرتبطة
       };
 
       if (
@@ -377,6 +395,33 @@ export default function Products() {
                   }
                   label="Top Rating"
                 />
+              </div>
+
+              {/* إضافة حقول إدخال للمنتجات المرتبطة */}
+              <div className="input-group">
+                <label>Related Products</label>
+                {relatedProducts.map((relatedProduct, index) => (
+                  <div key={index} style={{ marginBottom: "10px" }}>
+                    <Autocomplete
+                      options={product}
+                      getOptionLabel={(option) => option.title}
+                      onChange={(event, newValue) =>
+                        handleRelatedProductChange(index, "id", newValue ? newValue.id : "")
+                      }
+                      renderInput={(params) => (
+                        <TextField {...params} label="Select Product" variant="outlined" />
+                      )}
+                    />
+                    <input
+                      type="number"
+                      value={relatedProduct.price}
+                      onChange={(e) =>
+                        handleRelatedProductChange(index, "price", e.target.value)
+                      }
+                      placeholder="Enter price"
+                    />
+                  </div>
+                ))}
               </div>
             </form>
           </DialogContent>
