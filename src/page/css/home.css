@@ -215,3 +215,24 @@
     font-size: 13px;
   }
 }
+.points{
+  background: #704f38;
+  color : white;
+}
+.overwrite-content-cards-card-content-title-p{
+  font-size: 14px;
+  font-weight: bold;
+  color: #f4f7fb; /* لون النص */
+}
+
+.overwrite-content-cards-card-content-value-p{
+  font-size: 24px;
+  font-weight: bold;
+  color: #f9f9f9; /* لون النص */
+}
+
+.overwrite-content-cards-card-content-value-p i {
+  font-size: 20px;
+  font-weight: bold;
+  padding: 5px;
+}

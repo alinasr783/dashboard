@@ -6,6 +6,7 @@ import "@fortawesome/fontawesome-free/css/all.css";
 import "../css/home.css";
 
 export default function Home() {
+  const [points, setPoints] = useState(0);
   const [ordersNum, setOrdersNum] = useState(0);
   const [cartsNum, setCartsNum] = useState(0);
   const [wishlistNum, setWishlistNum] = useState(0);
@@ -17,6 +18,10 @@ export default function Home() {
   const [addedWishlist, setAddedWishlist] = useState([]);
   const [viewers, setViewers] = useState([]);
 
+  const getPoints = async () =>{
+    const { data, error } = await supabase.from('setting').select('*')
+    setPoints(data[0].points)
+  }
   const getOrdersNum = async () => {
     const { data, error } = await supabase.from("order").select("*");
     setOrdersNum(data.length);
@@ -149,6 +154,25 @@ export default function Home() {
         <div className="overwrite-content">
           <div className="overwrite-content-cards">
             {/* Existing Cards */}
+            <div className="overwrite-content-cards-card points">
+              <div className="overwrite-content-cards-card-icon">
+                <div
+                  className={`heart-icon`}
+                  dangerouslySetInnerHTML={{
+                    __html: OrdersActive,
+                  }}
+                />
+              </div>
+              <div className="overwrite-content-cards-card-content">
+                <div className="overwrite-content-cards-card-content-value-p">
+                  <i className="fa fa-plus"></i>
+                  {points}
+                </div>
+                <div className="overwrite-content-cards-card-content-title-p">
+                  Points
+                </div>
+              </div>
+            </div>
             <div className="overwrite-content-cards-card">
               <div className="overwrite-content-cards-card-icon">
                 <div

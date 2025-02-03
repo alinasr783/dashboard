@@ -1,23 +1,24 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { getAuth } from "firebase/auth";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBC3Vifk2BqueUVYFOuNdtC3nuyBIhTg_4",
   authDomain: "rouver2.firebaseapp.com",
   projectId: "rouver2",
-  storageBucket: "rouver2.firebasestorage.app",
+  storageBucket: "rouver2.appspot.com",
   messagingSenderId: "2754655045",
   appId: "1:2754655045:web:e44523b9dd34b45284442c",
   measurementId: "G-7H782J65TH"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-console.log("Firebase App Initialized:", app);
+// تأكد من عدم تهيئة التطبيق أكثر من مرة
+let app;
+if (!initializeApp.apps?.length) {
+  app = initializeApp(firebaseConfig);
+} else {
+  app = initializeApp.apps[0];
+}
 
-// Optional: Initialize Analytics if needed
-const analytics = getAnalytics(app);
+const auth = getAuth(app);
 
-export { app, analytics };
+export { app, auth };
