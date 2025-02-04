@@ -140,7 +140,7 @@ export default function Home() {
     getWishlistNum();
     getMoneyNum();
     getUsersNum();
-
+    getPoints();
     getTopSales();
     getAddedCart();
     getAddedwishlist();
